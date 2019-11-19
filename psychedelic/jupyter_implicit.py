@@ -9,8 +9,8 @@
 #                                                                              #
 # LICENCE INFORMATION                                                          #
 #                                                                              #
-# The program spin provides imports, environment printout, Keras callbacks and #
-# handy functions suited for use in a Jupyter notebook.                        #
+# This program provides imports, environment printout, Keras callbacks and     #
+# handy functions suitable for use in a Jupyter notebook.                      #
 #                                                                              #
 # copyright (C) 2019 William Breaden Madden                                    #
 #                                                                              #
