@@ -1,2 +1,5 @@
 # psychedelic
-utilities for machine learning etc.
+
+```Bash
+pip install psychedelic
+```
