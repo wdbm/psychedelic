@@ -133,7 +133,7 @@ print('Keras version:', keras.__version__)
 print('Matplotlib version:', matplotlib.__version__)
 print('NumPy version:', np.__version__)
 print('TensorFlow version:', tf.__version__)
-list_local_devices()
+print(list_local_devices())
 
 ################################################################################
 #                                                                              #

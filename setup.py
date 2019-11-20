@@ -7,7 +7,7 @@ import setuptools
 def main():
     setuptools.setup(
         name                 = 'psychedelic',
-        version              = '2019.11.19.1334',
+        version              = '2019.11.20.1700',
         description          = 'utilities for machine learning etc.',
         long_description     = long_description(),
         url                  = 'https://github.com/wdbm/psychedelic',
