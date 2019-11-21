@@ -400,3 +400,22 @@ def scatterplot_two_classes_marginal_histograms(
         plt.show();
     if return_plot:
         return fig
+
+def draw_pie(ax, ratios=[0.333, 0.333, 0.333], X=0, Y=0, size=10, colors=None):
+    ratios = [float(ratio)/sum(ratios) for ratio in ratios]
+    N = len(ratios)
+    xy = []
+    start = 0
+    for ratio in ratios:
+        x = [0]+np.cos(np.linspace(2*math.pi*start, 2*math.pi*(start+ratio), 100)).tolist()
+        y = [0]+np.sin(np.linspace(2*math.pi*start, 2*math.pi*(start+ratio), 100)).tolist()
+        xy1 = zip(x,y)
+        xy.append(xy1)
+        start += ratio
+    if not colors:
+        colors = ['#e6194B', '#f58231', '#ffe119', '#bfef45', '#3cb44b', '#42d4f4',
+                  '#4363d8', '#911eb4', '#f032e6', '#a9a9a9', '#800000', '#9a6324',
+                  '#808000', '#469990', '#000075', '#000000', '#fabebe', '#ffd8b1',
+                  '#fffac8', '#aaffc3', '#e6beff', '#ffffff']
+    for i, xyi in enumerate(xy):
+        ax.scatter([X], [Y] , marker=(list(xyi), 0), s=size, facecolor=colors[i])
