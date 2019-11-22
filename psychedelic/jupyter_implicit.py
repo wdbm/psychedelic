@@ -41,7 +41,7 @@ import sqlite3
 import sys
 import uuid
 import warnings
-warnings.filterwarnings("ignore")
+warnings.filterwarnings('ignore')
 
 import numpy as np
 np.random.seed(1337)
@@ -70,6 +70,7 @@ from   keras.utils.vis_utils import model_to_dot
 from   livelossplot.keras import PlotLossesCallback
 import matplotlib
 from   matplotlib import gridspec
+import matplotlib.patches as mpatches
 import matplotlib.pylab as plt
 import matplotlib.ticker
 from   matplotlib.ticker import NullFormatter, NullLocator, MultipleLocator
@@ -401,7 +402,8 @@ def scatterplot_two_classes_marginal_histograms(
     if return_plot:
         return fig
 
-def draw_pie(ax, ratios=[0.333, 0.333, 0.333], X=0, Y=0, size=10, colors=None):
+def draw_pie(ax, ratios=[0.333, 0.333, 0.333], X=0, Y=0, size=10, colors=None, legend_names=None):
+    ratios = [abs(ratio) for ratio in ratios]
     ratios = [float(ratio)/sum(ratios) for ratio in ratios]
     N = len(ratios)
     xy = []
@@ -413,9 +415,19 @@ def draw_pie(ax, ratios=[0.333, 0.333, 0.333], X=0, Y=0, size=10, colors=None):
         xy.append(xy1)
         start += ratio
     if not colors:
+        # https://sashat.me/2017/01/11/list-of-20-simple-distinct-colors
+        #colors = ['#ffe119', '#4363d8', '#000000', '#a9a9a9', '#ffffff', '#800000',
+        #          '#000075', '#f58231', '#fabebe', '#e6beff', '#e6194B', '#bfef45',
+        #          '#3cb44b', '#42d4f4', '#911eb4', '#f032e6', '#9a6324', '#808000',
+        #          '#469990', '#ffd8b1', '#fffac8', '#aaffc3']
         colors = ['#e6194B', '#f58231', '#ffe119', '#bfef45', '#3cb44b', '#42d4f4',
                   '#4363d8', '#911eb4', '#f032e6', '#a9a9a9', '#800000', '#9a6324',
                   '#808000', '#469990', '#000075', '#000000', '#fabebe', '#ffd8b1',
-                  '#fffac8', '#aaffc3', '#e6beff', '#ffffff']
+                  '#fffac8', '#aaffc3', '#e6beff', '#ffffff', '#000000']
     for i, xyi in enumerate(xy):
         ax.scatter([X], [Y] , marker=(list(xyi), 0), s=size, facecolor=colors[i])
+    #if legend_names:
+    #    patches = []
+    #    for color in colors[:len(feature_names)]:
+    #        patches.append(mpatches.Rectangle((0, 0), 1, 1, fc=color))
+    #    ax.legend(patches, feature_names, loc='center left', bbox_to_anchor=(1, 0.5), prop={'size': 16})
