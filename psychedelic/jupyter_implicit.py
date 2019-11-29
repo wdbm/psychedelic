@@ -129,12 +129,24 @@ sns.set(style='ticks')
 #                                                                              #
 ################################################################################
 
-print('Python version:', sys.version)
-print('Keras version:', keras.__version__)
-print('Matplotlib version:', matplotlib.__version__)
-print('NumPy version:', np.__version__)
-print('TensorFlow version:', tf.__version__)
-print('\n' + str(list_local_devices()))
+def environment_printout(printout_devices=True, preferred_device=None):
+    '''
+    Print out details about the computing environment. If a printout of devices
+    is requested, then a printout of all devices is made unless a preferred
+    device is specified, in which case a printout only of that device is made.
+    '''
+    print('Python version:', sys.version)
+    print('Keras version:', keras.__version__)
+    print('Matplotlib version:', matplotlib.__version__)
+    print('NumPy version:', np.__version__)
+    print('TensorFlow version:', tf.__version__)
+    if printout_devices:
+        if not preferred_device:
+            print('\n' + str(list_local_devices()))
+        if preferred_device:
+            for device in list_local_devices():
+                if preferred_device in device.physical_device_desc:
+                    print('\n' + str(device))
 
 ################################################################################
 #                                                                              #
