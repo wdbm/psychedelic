@@ -39,6 +39,7 @@ import os
 import pickle
 import random
 import sqlite3
+import time
 import sys
 import uuid
 import warnings
@@ -47,6 +48,7 @@ warnings.filterwarnings('ignore')
 import numpy as np
 np.random.seed(1337)
 import graphviz
+from   IPython.display import clear_output
 from   IPython.display import SVG
 import keras
 from   keras import activations
@@ -156,15 +158,34 @@ def environment_printout(printout_devices=True, preferred_device=None):
 ################################################################################
 
 class EpochProgressBar(keras.callbacks.Callback):
+    # callbacks = [EpochProgressBar()]
     def on_train_begin(self, logs={}):
-        self.total_epochs  = self.params['epochs']
+        self.total_epochs = self.params['epochs']
         self.current_epoch = 0
         self.pbar = tqdm_notebook(total=self.total_epochs, desc='epochs')
     def on_epoch_end(self, batch, logs={}):
         self.current_epoch += 1
         #print(f'epoch {self.current_epoch} of epochs {self.total_epochs}')
         self.pbar.update(1);
-epoch_progress_bar = EpochProgressBar()
+
+class ProgressStatus(keras.callbacks.Callback):
+    # callbacks = [ProgressStatus()]
+    def __init__(self, eta=True):
+        self.eta = eta
+    def on_train_begin(self, logs={}):
+        self.total_epochs = self.params['epochs']
+        self.current_epoch = 0
+        if self.eta:
+            self.start_time = time.time()
+    def on_epoch_end(self, batch, logs={}):
+        self.current_epoch += 1
+        clear_output(wait=True)
+        if self.eta:
+            estimate_total_duration = (time.time()-self.start_time)/(self.current_epoch/self.total_epochs)
+            estimated_time_of_completion = (datetime.datetime.utcnow()+datetime.timedelta(seconds=time_taken/0.5)).strftime("%Y-%m-%dT%H%M%SZ")
+            print(f'epoch {self.current_epoch} of epochs {self.total_epochs} (ETA: {estimated_time_of_completion})')
+        else:
+            print(f'epoch {self.current_epoch} of epochs {self.total_epochs}')
 
 class StopAtBeyondAccuracyValue(keras.callbacks.Callback):
     def __init__(self, val_accuracy=None):
