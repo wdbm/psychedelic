@@ -170,8 +170,9 @@ class EpochProgressBar(keras.callbacks.Callback):
 
 class ProgressStatus(keras.callbacks.Callback):
     # callbacks = [ProgressStatus()]
-    def __init__(self, eta=True):
+    def __init__(self, eta=True, clear_output_continuously=True):
         self.eta = eta
+        self.clear_output_continuously = clear_output_continuously
     def on_train_begin(self, logs={}):
         self.total_epochs = self.params['epochs']
         self.current_epoch = 0
@@ -179,10 +180,12 @@ class ProgressStatus(keras.callbacks.Callback):
             self.start_time = time.time()
     def on_epoch_end(self, batch, logs={}):
         self.current_epoch += 1
-        clear_output(wait=True)
+        if self.clear_output_continuously:
+            clear_output(wait=True)
         if self.eta:
-            estimate_total_duration = (time.time()-self.start_time)/(self.current_epoch/self.total_epochs)
-            estimated_time_of_completion = (datetime.datetime.utcnow()+datetime.timedelta(seconds=time_taken/0.5)).strftime("%Y-%m-%dT%H%M%SZ")
+            time_taken_so_far = time.time()-self.start_time
+            estimate_total_duration = time_taken_so_far/(self.current_epoch/self.total_epochs)
+            estimated_time_of_completion = (datetime.datetime.utcnow()+datetime.timedelta(seconds=time_taken_so_far/0.5)).strftime("%Y-%m-%dT%H%M%SZ")
             print(f'epoch {self.current_epoch} of epochs {self.total_epochs} (ETA: {estimated_time_of_completion})')
         else:
             print(f'epoch {self.current_epoch} of epochs {self.total_epochs}')
@@ -207,11 +210,14 @@ class StopAtBeyondAccuracyValue(keras.callbacks.Callback):
 #        )
 #        return callback_TensorBoard
 
-def TensorBoardCallback():
+def TensorBoardCallback(model_name=None):
     # rm /tmp/tensorboard/*
     # tensorboard --logdir /tmp/tensorboard
     # http://127.0.1.1:6006
-    return TensorBoard(log_dir=f'/tmp/tensorboard/{datetime.datetime.utcnow().strftime("%Y-%m-%dT%H%M%SZ")}')
+    if model_name:
+        return TensorBoard(log_dir=f'/tmp/tensorboard/{datetime.datetime.utcnow().strftime("%Y-%m-%dT%H%M%SZ")}_{model_name}')
+    else:
+        return TensorBoard(log_dir=f'/tmp/tensorboard/{datetime.datetime.utcnow().strftime("%Y-%m-%dT%H%M%SZ")}')
 
 class EarlyStoppingWithManualStop(keras.callbacks.Callback):
     """
@@ -380,6 +386,9 @@ stop_early_with_manual = EarlyStoppingWithManualStop(
 #                                                                              #
 ################################################################################
 
+def UUID4MIN():
+    return str(uuid.uuid4()).split('-')[0]
+
 def timestamp_string():
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H%M%SZ")
 
@@ -403,11 +412,14 @@ def summary_and_diagram(model):
     return SVG(model_to_dot(model).create(prog='dot', format='svg'))
     #return SVG(model_to_dot(model, show_shapes=True, show_layer_names=True).create(prog='dot', format='svg'))
 
-def save_model(model):
-    uuid4_min = str(uuid.uuid4()).split('-')[0]
-    filepath = timestamp_string() + "_" + uuid4_min + "_model.ph5"
-    model.save(filepath)
+def save_model(model, model_name=None):
+    if model_name:
+        filepath = timestamp_string() + "_" + model_name + "_model.ph5"
+    else:
+        uuid4_min = str(uuid.uuid4()).split('-')[0]
+        filepath = timestamp_string() + "_" + uuid4_min + "_model.ph5"
     print(f"save to {filepath}")
+    model.save(filepath)
     return filepath
 
 def model_evaluation(model, x_test, y_test, verbose=False):
