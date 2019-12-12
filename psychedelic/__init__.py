@@ -33,4 +33,4 @@
 """
 
 name        = "psychedelic"
-__version__ = "2019-12-04T2240Z"
+__version__ = "2019-12-12T1501Z"

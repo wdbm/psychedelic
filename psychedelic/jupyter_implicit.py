@@ -616,3 +616,9 @@ def draw_pie(ax, ratios=[0.333, 0.333, 0.333], X=0, Y=0, size=10, colors=None, l
     #    for color in colors[:len(feature_names)]:
     #        patches.append(mpatches.Rectangle((0, 0), 1, 1, fc=color))
     #    ax.legend(patches, feature_names, loc='center left', bbox_to_anchor=(1, 0.5), prop={'size': 16})
+
+def restart_Jupyter_kernel():
+    os._exit(00)
+
+def wait_hours(hours):
+    time.sleep(hours*60*60)
