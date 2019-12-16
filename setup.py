@@ -31,7 +31,7 @@ def main():
                                'scipy',
                                'seaborn',
                                'talos',
-                               'tensorflow-gpu==1.12',
+                               'tensorflow-gpu==1.15.0',
                                'tqdm',
                                'umap-learn'
                                ],
