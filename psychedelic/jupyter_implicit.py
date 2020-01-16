@@ -48,8 +48,12 @@ warnings.filterwarnings('ignore')
 import numpy as np
 np.random.seed(1337)
 import graphviz
-from   IPython.display import clear_output
-from   IPython.display import SVG
+from   IPython.display import (
+            clear_output,
+            display,
+            HTML,
+            Javascript,
+            SVG)
 import keras
 from   keras import activations
 from   keras import backend as K
@@ -619,6 +623,35 @@ def draw_pie(ax, ratios=[0.333, 0.333, 0.333], X=0, Y=0, size=10, colors=None, l
 
 def restart_Jupyter_kernel():
     os._exit(00)
+
+def restart_and_run_all():
+    display(HTML(
+        '''
+        <script>        
+        var aTags = document.getElementsByTagName("a");
+        var searchText = "Restart & Run All";
+        var found;
+        for (var i = 0; i < aTags.length; i++) {
+          if (aTags[i].textContent == searchText) {
+            found = aTags[i];
+            break;
+          }
+        }
+        found.click()
+
+        var bTags = document.getElementsByTagName("button");
+        var searchText = "Restart and Run All Cells";
+        var found;
+        for (var i = 0; i < bTags.length; i++) {
+          if (bTags[i].textContent == searchText) {
+            found = bTags[i];
+            break;
+          }
+        }
+        found.click()
+        </script>
+        '''
+    ))
 
 def wait_hours(hours):
     time.sleep(hours*60*60)
