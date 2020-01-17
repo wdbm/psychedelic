@@ -7,7 +7,7 @@ import setuptools
 def main():
     setuptools.setup(
         name                 = 'psychedelic',
-        version              = '2020.01.16.2328',
+        version              = '2020.01.17.2027',
         description          = 'utilities for machine learning etc.',
         long_description     = long_description(),
         url                  = 'https://github.com/wdbm/psychedelic',
@@ -31,7 +31,7 @@ def main():
                                'scipy',
                                'seaborn',
                                'talos',
-                               'tensorflow-gpu==1.12',
+                               'tensorflow-gpu>=1.12',
                                'tqdm',
                                'umap-learn'
                                ],
