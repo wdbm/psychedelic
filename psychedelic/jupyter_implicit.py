@@ -54,7 +54,7 @@ from   IPython.display import (
             HTML,
             Javascript,
             SVG)
-import keras
+import tensorflow.keras as keras
 from   keras import activations
 from   keras import backend as K
 from   keras.datasets import mnist
@@ -83,6 +83,7 @@ import matplotlib.ticker
 from   matplotlib.ticker import NullFormatter, NullLocator, MultipleLocator
 import mpl_toolkits.mplot3d
 import pandas as pd
+import pkg_resources
 from   scipy import stats
 from   scipy.stats import zscore
 import seaborn as sns
@@ -147,6 +148,10 @@ def environment_printout(printout_devices=True, preferred_device=None):
     print('Matplotlib version:', matplotlib.__version__)
     print('NumPy version:', np.__version__)
     print('TensorFlow version:', tf.__version__)
+    try:
+        print('Keras-Vis version: ', pkg_resources.get_distribution("keras-vis").version)
+    except:
+        print('Keras-Vis version: None')
     if printout_devices:
         if not preferred_device:
             print('\n' + str(list_local_devices()))
@@ -198,7 +203,7 @@ class StopAtBeyondAccuracyValue(keras.callbacks.Callback):
     def __init__(self, val_accuracy=None):
         self.val_accuracy = val_accuracy
     def on_epoch_end(self, batch, logs={}):
-        if logs.get('val_acc') >= self.val_accuracy:
+        if logs.get('val_accuracy') >= self.val_accuracy:
              self.model.stop_training = True
 
 #class TensorBoardCallback(object):
@@ -428,10 +433,10 @@ def save_model(model, model_name=None):
 
 def model_evaluation(model, x_test, y_test, verbose=False):
     score = model.evaluate(x_test, y_test, verbose=verbose)
-    print('max. test accuracy observed:', max(model.history.history['val_acc']))
-    print('max. test accuracy history index:', model.history.history['val_acc'].index(max(model.history.history['val_acc'])))
-    plt.plot(model.history.history['acc'],     label='train')
-    plt.plot(model.history.history['val_acc'], label='validation')
+    print('max. test accuracy observed:', max(model.history.history['val_accuracy']))
+    print('max. test accuracy history index:', model.history.history['val_accuracy'].index(max(model.history.history['val_accuracy'])))
+    plt.plot(model.history.history['accuracy'],     label='train')
+    plt.plot(model.history.history['val_accuracy'], label='validation')
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(loc='best')
@@ -439,8 +444,8 @@ def model_evaluation(model, x_test, y_test, verbose=False):
     plt.show();
 
 def model_training_plot(history):
-    plt.plot(history.history['acc'],     marker='.', label='train')
-    plt.plot(history.history['val_acc'], marker='.', label='validation')
+    plt.plot(history.history['accuracy'],     marker='.', label='train')
+    plt.plot(history.history['val_accuracy'], marker='.', label='validation')
     plt.title('accuracy')
     plt.grid(True)
     plt.xlabel('epoch')
