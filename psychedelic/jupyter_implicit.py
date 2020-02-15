@@ -458,7 +458,8 @@ def plot_separation(
     b,
     bins       = 25,
     limits     = (-0.5, 1.5),
-    legend_loc = 'upper left'
+    legend_loc = 'upper left',
+    verbose    = True
     ):
     bins = np.linspace(limits[0], limits[1], bins)
     f, ax = plt.subplots()
@@ -489,8 +490,10 @@ def plot_separation(
     plt.xlabel('probability')
     plt.ylabel('cases')
     plt.show();
+    if verbose:
+        print(f'KS2: {stats.ks_2samp(s, b)}')
 
-def class_prediction_error_plot(class_0, class_1):
+def class_prediction_error_plot(class_0, class_1, verbose=True):
     score_class_0 = len([i for i in class_0 if i<0.5])/len(class_0)
     score_class_1 = len([i for i in class_1 if i>=0.5])/len(class_1)
 
@@ -513,6 +516,12 @@ def class_prediction_error_plot(class_0, class_1):
     #plt.legend((p2[0], p1[0]), ('background', 'signal'), loc='center left', bbox_to_anchor=(1, 0.5));
     plt.legend((p2[0], p1[0]), ('background', 'signal'), loc='best');
     plt.show();
+    if verbose:
+        print('class prediction errors:')
+        print(f'fraction correct for class 0: {cc0/(cc0+ci0)}')
+        print(f'fraction incorrect for class 0: {ci0/(cc0+ci0)}')
+        print(f'fraction correct for class 1: {cc1/(cc1+ci1)}')
+        print(f'fraction incorrect for class 1: {ci1/(cc1+ci1)}')
 
 def rotate_ROC(points=None, theta=-0.785398, origin=(1, 0)):
     # e.g. rotate_ROC(points=np.array([list(i) for i in zip(fpr_en, tpr_en)]))
