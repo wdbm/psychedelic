@@ -22,7 +22,7 @@ def main():
                                'keras',
                                'keras_tqdm',
                                'livelossplot>=0.4.1',
-                               'matplotlib',
+                               'matplotlib==3.0.2',
                                'numpy',
                                'pandas',
                                'pydot',
